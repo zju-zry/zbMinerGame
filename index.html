@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!---- 苹果浏览器---->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>第一黄金网-黄金矿工</title>
+    <link rel="stylesheet" href="public/css/global.css">
+</head>
+<body>
+<div class="main">
+    <!--加载页面-->
+    <div class="loadingHtml">
+        <img src="public/image/startBg.jpg" alt="">
+    </div>
+    <!--矿车-->
+    <img class="cart" src="public/image/cart.gif" alt="">
+    <!--钩子-->
+    <div class="hookBox">
+        <img class="hook" src="public/image/hookOpen.png">
+        <div class="hookPoint"></div>
+    </div>
+    <!--弹出线-->
+    <div class="hookLine"></div>
+    <!--点击区域-->
+    <div class="tabBox"></div>
+</div>
+<script>
+    (function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                if (clientWidth >= 640) {
+                    docEl.style.fontSize = '25px';
+                } else {
+                    docEl.style.fontSize = clientWidth * 0.05 + 'px';
+                }
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+</script>
+<script src="public/js/jquery-1.12.0.min.js"></script>
+<script src="public/js/global.js"></script>
+</body>
+</html>
