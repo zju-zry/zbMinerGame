@@ -9,6 +9,7 @@ function completeLoading() {
 }
 
 setTimeout(()=>{
+    $(".loadingHtml").fadeOut(1000);
     gameStart();
 },2000);
 
@@ -41,16 +42,16 @@ var levelArray = [
             {
                 type: "gold",   //类型
                 score: 100,     //分数
-                speed: 15        //速度 不超过20 数值越大速度越慢
+                speed: 8        //速度 不超过20 数值越大速度越慢
             },
-            {type: "gold", score: 400, speed: 18},
-            {type: "gold", score: 200, speed: 16},
-            {type: "gold", score: 200, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
         ],
         stone: [
-            {type: "stone", score: 50, speed: 19},
-            {type: "stone", score: 30, speed: 18},
-            {type: "stone", score: 20, speed: 17},
+            {type: "stone", score: 50, speed: 18},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
         ]
     }
 ];
@@ -65,10 +66,6 @@ $(document).ready(function () {
     //为钩子 线 重新赋值 位置大小等信息px
     $(".hookBox").css({"height": remPx * 4.5, "top": remPx * 9.2, "left": remPx * 9,});
     $(".hookLine").css({"height": remPx, "top": remPx * 9.2, "left": remPx * 9.9,});
-    //绘制金矿
-    renderOre(levelArray[level - 1].gold);
-    //绘制大石头
-    renderOre(levelArray[level - 1].stone);
     //点击弹出钩子
     $(".tabBox").on("click", function () {
         //判断钩子有没有收回
@@ -94,7 +91,11 @@ function gameStop() {
  * 游戏开始
  */
 function gameStart() {
-    $(".loadingHtml").fadeOut(1000);
+    $(".oreImg").remove();
+    //绘制金矿
+    renderOre(levelArray[level - 1].gold);
+    //绘制大石头
+    renderOre(levelArray[level - 1].stone);
     gameTime = 60;
     $(".gameTime").text(gameTime);
     //钩子摆动
@@ -190,6 +191,7 @@ function hookMove(moveSmer) {
                 //如果矿石全部抓完 当前关卡结束
                 if($(".oreImg").length==0){
                     gameStop();
+                    level+=1;
                 }
             }
         }
@@ -257,7 +259,7 @@ function getNum(lowerValue, upperValue) {
 function renderOre(arr) {
     for (var i = 0; i < arr.length; i++) {
         // 通过getNum函数获取图片xy轴的坐标
-        var top = getNum(tabBoxOffsetTop + 50, tabBoxHeight), left = getNum(0, tabBoxWidth);
+        var top = getNum(tabBoxOffsetTop + 50, tabBoxHeight), left = getNum(0, tabBoxWidth) + $(".tabBox").offset().left;
         //随机旋转角度
         var rotate = getNum(0, 360);
         //根据分值绘制大小
@@ -278,7 +280,7 @@ function renderOre(arr) {
             .css({
                 "top": top,
                 "left": left,
-                "position": "absolute",
+                "position": "fixed",
                 "transform": "rotate(" + rotate + "deg) scale(" + scale + ")"
             });
     }
