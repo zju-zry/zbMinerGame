@@ -4,9 +4,13 @@ document.onreadystatechange = completeLoading;
 //加载状态为complete时移除loading效果
 function completeLoading() {
     if (document.readyState == "complete") {
-        $(".loadingHtml").fadeOut(1000);
+        // $(".loadingHtml").fadeOut(1000);
     }
 }
+
+setTimeout(()=>{
+    gameStart();
+},2000);
 
 var hookDeg = 0;            //钩子摆动角度
 var hookState = false;      //钩子摆动状态 false 启动 true 停止
@@ -22,24 +26,31 @@ var remPx = 0;              //换算单位 1rem 等于多少px
 var moveHeight = 0;         //钩子伸出距离
 var speed = 20;              //钩子速度
 var isAfterOre = true;     //碰到后关闭查找是否碰触元素方法
+var userScore = 0;          //用户拿到的分数值
 var objOre;                 //触碰到的矿石
+var gameTime = 60;          //没关的游戏时间
+var gameState = false;      //是否是否启动
+
+/**
+ * 共分5关 第一关1000 第二关1500 第三关2000 第四关2500 第五关3000
+ */
 
 var levelArray = [
     {
         gold: [
             {
                 type: "gold",   //类型
-                score: 200      //分数
+                score: 100,     //分数
+                speed: 15        //速度 不超过20 数值越大速度越慢
             },
-            {type: "gold", score: 400},
-            {type: "gold", score: 300},
+            {type: "gold", score: 400, speed: 18},
+            {type: "gold", score: 200, speed: 16},
+            {type: "gold", score: 200, speed: 16},
         ],
         stone: [
-            {type: "stone", score: 50},
-            {type: "stone", score: 10},
-            {type: "stone", score: 30},
-            {type: "stone", score: 20},
-            {type: "stone", score: 40},
+            {type: "stone", score: 50, speed: 19},
+            {type: "stone", score: 30, speed: 18},
+            {type: "stone", score: 20, speed: 17},
         ]
     }
 ];
@@ -49,19 +60,15 @@ $(document).ready(function () {
     tabBoxHeight = $(".tabBox").height(); //挖矿区域盒子高度
     tabBoxOffsetTop = $(".tabBox").offset().top; //挖矿区域盒子高度
     remPx = $(".hookLine")[0].getBoundingClientRect().height;        //remPx 赋值为 1rem 的 px值
-
     //钩子伸出距离初始赋值
-    moveHeight = $(".main").height()-remPx*9.2;
+    moveHeight = $(".main").height() - remPx * 9.2;
     //为钩子 线 重新赋值 位置大小等信息px
-    $(".hookBox").css({"height":remPx*4.5,"top":remPx*9.2,"left":remPx*9,});
-    $(".hookLine").css({"height":remPx,"top":remPx*9.2,"left":remPx*9.9,});
-
+    $(".hookBox").css({"height": remPx * 4.5, "top": remPx * 9.2, "left": remPx * 9,});
+    $(".hookLine").css({"height": remPx, "top": remPx * 9.2, "left": remPx * 9.9,});
     //绘制金矿
     renderOre(levelArray[level - 1].gold);
     //绘制大石头
     renderOre(levelArray[level - 1].stone);
-    //钩子摆动
-    hookStart();
     //点击弹出钩子
     $(".tabBox").on("click", function () {
         //判断钩子有没有收回
@@ -73,6 +80,42 @@ $(document).ready(function () {
         hookMove(1);
     })
 });
+
+/**
+ * 游戏结束
+ */
+function gameStop() {
+    //钩子停止
+    hookStop();
+    gameState = false;
+}
+
+/**
+ * 游戏开始
+ */
+function gameStart() {
+    $(".loadingHtml").fadeOut(1000);
+    gameTime = 60;
+    $(".gameTime").text(gameTime);
+    //钩子摆动
+    hookStart();
+    gameState = true;
+    gameTimeStart();
+}
+
+// 定时器开始
+function gameTimeStart() {
+    if(!gameState){return}
+    if(gameTime!=0){
+        gameTime--;
+        $(".gameTime").text(gameTime);
+        setTimeout(function () {
+            gameTimeStart();
+        }, 1000);
+    }else{
+        gameStop();
+    }
+}
 
 /**
  * 钩子摆动动画
@@ -112,38 +155,51 @@ function hookStop() {
     hookState = true;
 }
 
-//钩子伸出
+/**
+ * 钩子伸出
+ * @param moveSmer  钩子伸出还是收回 1伸出 -1收回
+ */
 function hookMove(moveSmer) {
+    if (!gameState) return;
     //判断不能双击变量
     hookMoveStop = true;
     //钩子摆动停止
     hookStop();
     if (moveSmer == -1) {
         //钩子收回后的判断
-        if (hookMoveNum <= remPx+speed) {
+        if (hookMoveNum <= remPx + speed) {
             //将触碰矿石判断启动
             isAfterOre = true;
             //判断不能双击变量
             hookMoveStop = false;
             //钩子伸出控制器
             hookMoveState = true;
-            //如果触碰到矿石 收回后将矿石数据删除
-            if(objOre){
-                objOre.obj.remove();
-                objOre = null;
-            }
             //钩子伸出距离长度还原
-            moveHeight = $(".main").height()-remPx*9.2;
-            $(".hook").attr("src","public/image/hookOpen.png");
+            moveHeight = $(".main").height() - remPx * 9.2;
+            $(".hook").attr("src", "public/image/hookOpen.png");
             speed = 20;
             //钩子摆动启动
             hookStart();
+            //如果触碰到矿石 收回后将矿石数据删除
+            if (objOre) {
+                //矿石抓回后将分数加入
+                userScore += Number(objOre.obj.attr("data-score"));
+                $(".userScore").text(userScore);
+                objOre.obj.remove();
+                objOre = null;
+                //如果矿石全部抓完 当前关卡结束
+                if($(".oreImg").length==0){
+                    gameStop();
+                }
+            }
         }
     }
     if (hookMoveState) return;
-    if (moveSmer == 1) hookMoveNum+=speed;
-    else hookMoveNum-=speed;
-
+    //去除bug 有可能为负值
+    if (speed == 0) speed = 1;
+    if (speed < 0) speed = -speed;
+    if (moveSmer == 1) hookMoveNum += speed;
+    else hookMoveNum -= speed;
     if (hookMoveNum < remPx) {
         hookMoveNum = remPx;
         moveSmer = 1;
@@ -154,32 +210,31 @@ function hookMove(moveSmer) {
     }
 
     //是否能触碰矿石判断
-    if(isAfterOre){
+    if (isAfterOre) {
         //循环所有矿石 判断钩子是否触碰到
-        for(var i=0;i<$(".oreImg").length;i++){
-            if(impact($(".hook"), $(".oreImg").eq(i))){
+        for (var i = 0; i < $(".oreImg").length; i++) {
+            if (impact($(".hook"), $(".oreImg").eq(i))) {
                 //将触碰矿石判断关闭
                 isAfterOre = false;
                 objOre = impact($(".hook"), $(".oreImg").eq(i));
-                moveHeight = objOre.top-remPx*9.2;
-                $(".hook").attr("src","public/image/hookClose.png");
-                switch (objOre.obj.attr("data-type")){
+                moveHeight = objOre.top - remPx * 9.2;
+                $(".hook").attr("src", "public/image/hookClose.png");
+                switch (objOre.obj.attr("data-type")) {
                     case "gold":
-                        speed -= Number(objOre.obj.attr("data-score"))/50;
+                        speed -= Number(objOre.obj.attr("data-speed"));
                         break;
                     case "stone":
-                        speed -= Number(objOre.obj.attr("data-score"))/5;
-                        break
+                        speed -= Number(objOre.obj.attr("data-speed"));
+                        break;
                 }
-                console.log(speed)
             }
         }
     }
     //钩子 线 移动状态
-    $(".hookBox").css("height", hookMoveNum + remPx*3.5 + "px");
+    $(".hookBox").css("height", hookMoveNum + remPx * 3.5 + "px");
     $(".hookLine").css("height", hookMoveNum + "px");
-    if(objOre){
-        objOre.obj.css({"top": $(".hookPoint").offset().top, "left": $(".hookPoint").offset().left})
+    if (objOre) {
+        objOre.obj.css({"top": $(".hookPoint").offset().top - 10, "left": $(".hookPoint").offset().left - 10})
     }
     setTimeout('hookMove(' + moveSmer + ')', 50);
 }
@@ -217,7 +272,8 @@ function renderOre(arr) {
             "class": "oreImg",
             "src": "public/image/" + arr[i].type + ".png",
             "data-score": arr[i].score,
-            "data-type":arr[i].type
+            "data-type": arr[i].type,
+            "data-speed": arr[i].speed
         }).appendTo(".main")
             .css({
                 "top": top,
@@ -250,7 +306,7 @@ function impact(obj, dobj) {
     py = o.y <= d.y ? d.y : o.y;
     // 判断点是否都在两个对象中
     if (px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h && px >= d.x && px <= d.x + d.w && py >= d.y && py <= d.y + d.h) {
-        return {obj:dobj,top:d.y};
+        return {obj: dobj, top: d.y};
     } else {
         return false;
     }

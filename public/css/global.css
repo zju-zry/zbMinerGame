@@ -29,6 +29,22 @@ body{
     background-size: cover;
     overflow: hidden;
 }
+/*用户分数*/
+.userScore{
+    position: fixed;
+    top: 0.5rem;
+    left: 0.8rem;
+    color: #fff;
+    font-size: 1rem;
+}
+/*倒计时*/
+.gameTime{
+    position: fixed;
+    top: 0.5rem;
+    right: 0.8rem;
+    color: #fff;
+    font-size: 1rem;
+}
 /*点击区域*/
 .tabBox{
     width: 100%;
@@ -55,6 +71,7 @@ body{
     left: 9rem;
     top: 9.2rem;
     transform-origin: top center;
+    z-index: 1;
 }
 .hook{
     width: 2rem;
@@ -65,19 +82,19 @@ body{
 .hookPoint{
     position: absolute;
     left: 1rem;
-    bottom: 0;
+    bottom: 0.2rem;
     width: 1px;
     height: 1px;
-    opacity: 0;
+    opacity:0;
     visibility: hidden;
 }
 /*弹出线*/
 .hookLine{
-    width: 0.1rem;
+    width: 0.16rem;
     height: 1rem;
     position: absolute;
     top: 9.2rem;
-    left: 9.9rem;
+    left: 9.87rem;
     background: #6b3e0f;
     transform-origin: top center;
 }
