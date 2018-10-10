@@ -30,7 +30,8 @@ var isAfterOre = true;     //碰到后关闭查找是否碰触元素方法
 var userScore = 0;          //用户拿到的分数值
 var objOre;                 //触碰到的矿石
 var gameTime = 60;          //没关的游戏时间
-var gameState = false;      //是否是否启动
+var gameInterval;           //时间定时器控制 用于清除定时器
+var gameState = false;      //游戏是否启动
 
 /**
  * 共分5关 第一关1000 第二关1500 第三关2000 第四关2500 第五关3000
@@ -44,6 +45,21 @@ var levelArray = [
                 score: 100,     //分数
                 speed: 8        //速度 不超过20 数值越大速度越慢
             },
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+        ],
+        stone: [
+            {type: "stone", score: 50, speed: 18},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+        ]
+    },
+    {
+        gold: [
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
             {type: "gold", score: 400, speed: 16},
             {type: "gold", score: 200, speed: 10},
             {type: "gold", score: 200, speed: 10},
@@ -82,8 +98,12 @@ $(document).ready(function () {
  * 游戏结束
  */
 function gameStop() {
+    alert("游戏结束了!!! 您获得了"+userScore+"分");
+    // 清除定时器
+    clearInterval(gameInterval);
     //钩子停止
     hookStop();
+    //游戏是否启动
     gameState = false;
 }
 
@@ -91,31 +111,36 @@ function gameStop() {
  * 游戏开始
  */
 function gameStart() {
+    //游戏开始时清除所有矿石
     $(".oreImg").remove();
+    // 清除定时器
+    clearInterval(gameInterval);
     //绘制金矿
     renderOre(levelArray[level - 1].gold);
     //绘制大石头
     renderOre(levelArray[level - 1].stone);
     gameTime = 60;
-    $(".gameTime").text(gameTime);
+    $(".gameTime").text(gameTime+"s");
     //钩子摆动
     hookStart();
+    //游戏是否启动
     gameState = true;
     gameTimeStart();
 }
 
 // 定时器开始
 function gameTimeStart() {
+    //游戏是否启动
     if(!gameState){return}
-    if(gameTime!=0){
-        gameTime--;
-        $(".gameTime").text(gameTime);
-        setTimeout(function () {
-            gameTimeStart();
-        }, 1000);
-    }else{
-        gameStop();
-    }
+    gameInterval = setInterval(function(){
+        if(gameTime!=0){
+            gameTime--;
+            $(".gameTime").text(gameTime+"s");
+        }else{
+            gameStop();
+            clearInterval(gameInterval);
+        }
+    },1000);
 }
 
 /**
@@ -161,6 +186,7 @@ function hookStop() {
  * @param moveSmer  钩子伸出还是收回 1伸出 -1收回
  */
 function hookMove(moveSmer) {
+    //游戏是否启动
     if (!gameState) return;
     //判断不能双击变量
     hookMoveStop = true;
@@ -190,8 +216,15 @@ function hookMove(moveSmer) {
                 objOre = null;
                 //如果矿石全部抓完 当前关卡结束
                 if($(".oreImg").length==0){
-                    gameStop();
-                    level+=1;
+                    if(level<levelArray.length){
+                        level+=1;
+                        $(".main").css("background","url('public/image/gameBg"+level+".jpg')");
+                        $(".main").css("background-size","cover");
+                        gameStart();
+                    }else{
+                        gameStop();
+                    }
+
                 }
             }
         }
@@ -259,7 +292,7 @@ function getNum(lowerValue, upperValue) {
 function renderOre(arr) {
     for (var i = 0; i < arr.length; i++) {
         // 通过getNum函数获取图片xy轴的坐标
-        var top = getNum(tabBoxOffsetTop + 50, tabBoxHeight), left = getNum(0, tabBoxWidth) + $(".tabBox").offset().left;
+        var top = getNum(tabBoxOffsetTop + 50, tabBoxHeight), left = getNum(10, tabBoxWidth-40) + $(".tabBox").offset().left;
         //随机旋转角度
         var rotate = getNum(0, 360);
         //根据分值绘制大小
