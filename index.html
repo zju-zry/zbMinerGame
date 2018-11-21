@@ -21,25 +21,44 @@
 </head>
 <body>
 <div class="main">
+    <!--计算长度的盒子-->
+    <div class="remPx"></div>
+    <!--时间以及分数盒子-->
+    <div class="timeBrandBox">
+        <!--分数计算-->
+        <div class="userScore">0</div>
+        <!--倒计时-->
+        <div class="gameTime">90s</div>
+    </div>
+    <!--关卡牌子-->
+    <div class="levelBrandBox">
+        <div class="levelNum">level 1</div>
+    </div>
     <!--加载页面-->
     <div class="loadingHtml">
         <img src="public/image/startBg.jpg" alt="">
     </div>
-    <!--分数计算-->
-    <div class="userScore">0</div>
-    <!--倒计时-->
-    <div class="gameTime">60s</div>
     <!--矿车-->
     <img class="cart" src="public/image/cart.gif" alt="">
     <!--钩子-->
     <div class="hookBox">
-        <img class="hook" src="public/image/hookOpen.png">
+        <img id="hook" class="hook" src="public/image/hookOpen.png">
         <div class="hookPoint"></div>
     </div>
     <!--弹出线-->
     <div class="hookLine"></div>
     <!--点击区域-->
     <div class="tabBox"></div>
+    <!--游戏结束盒子-->
+    <div class="gameStopBox">
+        <div class="gameAllScoreBox">
+            <div class="gameStopText">最高积分</div>
+            <div class="gameAllScore gameAllScoreNum">0</div>
+            <div class="gameStopText gameStopLevelText">最高关卡</div>
+            <div class="gameAllScore gameLevel">1</div>
+            <div class="gameStopClose"></div>
+        </div>
+    </div>
 </div>
 <script>
     (function (doc, win) {

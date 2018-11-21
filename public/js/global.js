@@ -11,7 +11,7 @@ function completeLoading() {
 setTimeout(()=>{
     $(".loadingHtml").fadeOut(1000);
     gameStart();
-},2000);
+},0);
 
 var hookDeg = 0;            //钩子摆动角度
 var hookState = false;      //钩子摆动状态 false 启动 true 停止
@@ -29,7 +29,7 @@ var speed = 20;              //钩子速度
 var isAfterOre = true;     //碰到后关闭查找是否碰触元素方法
 var userScore = 0;          //用户拿到的分数值
 var objOre;                 //触碰到的矿石
-var gameTime = 60;          //没关的游戏时间
+var gameTime = 90;          //没关的游戏时间
 var gameInterval;           //时间定时器控制 用于清除定时器
 var gameState = false;      //游戏是否启动
 
@@ -69,19 +69,83 @@ var levelArray = [
             {type: "stone", score: 30, speed: 14},
             {type: "stone", score: 20, speed: 10},
         ]
-    }
+    },
+    {
+        gold: [
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
+        ],
+        stone: [
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+        ]
+    },
+    {
+        gold: [
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+        ],
+        stone: [
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 50, speed: 18},
+        ]
+    },
+    {
+        gold: [
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+        ],
+        stone: [
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 50, speed: 18},
+        ]
+    },
 ];
 
 $(document).ready(function () {
     tabBoxWidth = $(".tabBox").width(); //挖矿区域盒子宽度
     tabBoxHeight = $(".tabBox").height(); //挖矿区域盒子高度
     tabBoxOffsetTop = $(".tabBox").offset().top; //挖矿区域盒子高度
-    remPx = $(".hookLine")[0].getBoundingClientRect().height;        //remPx 赋值为 1rem 的 px值
+    remPx = $(".remPx")[0].getBoundingClientRect().height;        //remPx 赋值为 1rem 的 px值
     //钩子伸出距离初始赋值
     moveHeight = $(".main").height() - remPx * 9.2;
     //为钩子 线 重新赋值 位置大小等信息px
-    $(".hookBox").css({"height": remPx * 4.5, "top": remPx * 9.2, "left": remPx * 9,});
-    $(".hookLine").css({"height": remPx, "top": remPx * 9.2, "left": remPx * 9.9,});
+    $(".hookBox").css({"height": remPx * 4, "top": remPx * 8, "left": remPx * 9.2,});
+    $(".hookLine").css({"height": remPx * 3, "top": remPx * 8, "left": remPx * 9.9,});
     //点击弹出钩子
     $(".tabBox").on("click", function () {
         //判断钩子有没有收回
@@ -91,20 +155,28 @@ $(document).ready(function () {
         //触发弹出动作
         hookMoveState = false;
         hookMove(1);
-    })
+    });
+    //游戏结束关闭游戏
+    $(".gameStopClose").on("click",function(){
+        history.back(-1);
+    });
 });
 
 /**
  * 游戏结束
  */
 function gameStop() {
-    alert("游戏结束了!!! 您获得了"+userScore+"分");
+    // 游戏结束
+    $(".gameStopBox").fadeIn();
+    $(".gameAllScoreNum").text(userScore);
+    $(".gameLevel").text(level);
     // 清除定时器
     clearInterval(gameInterval);
     //钩子停止
     hookStop();
     //游戏是否启动
     gameState = false;
+
 }
 
 /**
@@ -119,7 +191,7 @@ function gameStart() {
     renderOre(levelArray[level - 1].gold);
     //绘制大石头
     renderOre(levelArray[level - 1].stone);
-    gameTime = 60;
+    gameTime = 90;
     $(".gameTime").text(gameTime+"s");
     //钩子摆动
     hookStart();
@@ -218,13 +290,17 @@ function hookMove(moveSmer) {
                 if($(".oreImg").length==0){
                     if(level<levelArray.length){
                         level+=1;
-                        $(".main").css("background","url('public/image/gameBg"+level+".jpg')");
+                        $(".main").css("background","url('public/image/gameBg"+level+".png')");
                         $(".main").css("background-size","cover");
+                        $(".timeBrandBox").css("background","url('public/image/timeBrand"+level+".png')");
+                        $(".timeBrandBox").css("background-size","cover");
+                        $(".levelBrandBox").css("background","url('public/image/levelBrand"+level+".png')");
+                        $(".levelBrandBox").css("background-size","cover");
+                        $(".levelNum").text("level "+level);
                         gameStart();
                     }else{
                         gameStop();
                     }
-
                 }
             }
         }
@@ -266,8 +342,8 @@ function hookMove(moveSmer) {
         }
     }
     //钩子 线 移动状态
-    $(".hookBox").css("height", hookMoveNum + remPx * 3.5 + "px");
-    $(".hookLine").css("height", hookMoveNum + "px");
+    $(".hookBox").css("height", hookMoveNum + remPx * 3 + "px");
+    $(".hookLine").css("height", hookMoveNum+ remPx * 2 + "px");
     if (objOre) {
         objOre.obj.css({"top": $(".hookPoint").offset().top - 10, "left": $(".hookPoint").offset().left - 10})
     }
