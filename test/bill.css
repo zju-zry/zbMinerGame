@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.w {
+    width: 390px;
+    margin: auto;
+}
+.w2 {
+    width: 370px;
+    margin: auto;
+}
+.header {
+    height: 44px;
+    background-color: pink;
+}
+.header2 {
+    height: 58px;
+    background-color:pink;
+    margin-top: 6px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+.item {
+    margin-top: 13px;
+    border-style:solid;
+	border-width:1px;
+}
+.word {
+    margin: 20px;
+}
