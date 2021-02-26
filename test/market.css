@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.w {
+    width: 390px;
+    margin: auto;
+}
+.header {
+    height: 158px;
+    background-color: pink;
+    position: relative;
+}
+.left {
+    text-align: center;
+    line-height: 35px;
+    float: left;
+    height: 35px;
+    width: 35px;
+    border-radius: 25px;
+    border: 1px solid;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.pic {
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: contain;
+}
+.pic1 {
+    position: relative;
+    left: 69px;
+    top: 8px;
+    width: 247px;
+    height: 146px;  
+    background-image: url(images/market.png);  
+}
+.pic2 {
+    position: relative;
+    right: 0px;
+    top: 8px;
+    width: 78px;
+    height: 98px;
+    background-image: url(images/金钱树_画板\ 1.png);
+}
+.pic3 {
+    position: relative;
+    left: 12px;
+    top: 106px;
+    width: 93px;
+    height: 40px;
+    background-image: url(images/钱币.png);
+}
