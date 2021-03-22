@@ -1,84 +1,58 @@
+<!-- 首页 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
-    <!-- uc强制竖屏 -->
-    <meta name="screen-orientation" content="portrait">
-    <!-- UC强制全屏 -->
-    <meta name="full-screen" content="yes">
-    <!-- UC应用模式 -->
-    <meta name="browsermode" content="application">
-    <!-- QQ强制竖屏 -->
-    <meta name="x5-orientation" content="portrait">
-    <!-- QQ强制全屏 -->
-    <meta name="x5-fullscreen" content="true">
-    <!---- 苹果浏览器---->
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <title>第一黄金网-黄金矿工</title>
-    <link rel="stylesheet" href="public/css/global.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+    main {
+      position: relative;
+      width: 480px;
+      margin: auto;
+    }
+    .button1 {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .button2 {
+      position: absolute;
+      top: 80px;
+      right: 20px;
+    }
+    .button3 {
+      position: absolute;
+      top: 400px;
+      left: 150px;
+      height: 80px;
+      width: 200px;
+      /* background-color: blue; */
+    }
+</style>
 </head>
 <body>
-<div class="main">
-    <!--计算长度的盒子-->
-    <div class="remPx"></div>
-    <!--时间以及分数盒子-->
-    <div class="timeBrandBox">
-        <!--分数计算-->
-        <div class="userScore">0</div>
-        <!--倒计时-->
-        <div class="gameTime">90s</div>
-    </div>
-    <!--关卡牌子-->
-    <div class="levelBrandBox">
-        <div class="levelNum">level 1</div>
-    </div>
-    <!--加载页面-->
-    <div class="loadingHtml">
-        <img src="public/image/startBg.jpg" alt="">
-    </div>
-    <!--矿车-->
-    <img class="cart" src="public/image/cart.gif" alt="">
-    <!--钩子-->
-    <div class="hookBox">
-        <img id="hook" class="hook" src="public/image/hookOpen.png">
-        <div class="hookPoint"></div>
-    </div>
-    <!--弹出线-->
-    <div class="hookLine"></div>
-    <!--点击区域-->
-    <div class="tabBox"></div>
-    <!--游戏结束盒子-->
-    <div class="gameStopBox">
-        <div class="gameAllScoreBox">
-            <div class="gameStopText">最高积分</div>
-            <div class="gameAllScore gameAllScoreNum">0</div>
-            <div class="gameStopText gameStopLevelText">最高关卡</div>
-            <div class="gameAllScore gameLevel">1</div>
-            <div class="gameStopClose"></div>
-        </div>
-    </div>
-</div>
-<script>
-    (function (doc, win) {
-        var docEl = doc.documentElement,
-            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
-            recalc = function () {
-                var clientWidth = docEl.clientWidth;
-                if (!clientWidth) return;
-                if (clientWidth >= 640) {
-                    docEl.style.fontSize = '25px';
-                } else {
-                    docEl.style.fontSize = clientWidth * 0.05 + 'px';
-                }
-            };
-        if (!doc.addEventListener) return;
-        win.addEventListener(resizeEvt, recalc, false);
-        doc.addEventListener('DOMContentLoaded', recalc, false);
-    })(document, window);
-</script>
-<script src="public/js/jquery-1.12.0.min.js"></script>
-<script src="public/js/global.js"></script>
+  <!--加载页面-->
+  <main>
+    <!-- 商店按钮 -->
+    <a href="shop.html">
+      <img class="button1" src="imgs/首页商店.png" alt="">
+    </a>
+    <!-- 账单按钮 -->
+    <a href="bill.html">
+      <img class="button2" src="imgs/首页账单.png" alt="">
+    </a>
+    <!-- start按钮 -->
+    <a href="game.html">
+      <div class="button3"></div>
+    </a>
+    <img src="public/image/startBg.jpg" alt="">
+  </main>
 </body>
 </html>

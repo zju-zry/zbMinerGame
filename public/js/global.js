@@ -4,13 +4,10 @@ document.onreadystatechange = completeLoading;
 //加载状态为complete时移除loading效果
 function completeLoading() {
     if (document.readyState == "complete") {
-        // $(".loadingHtml").fadeOut(1000);
+        // $(".loadingHtml").fadeOut(10000);
+        gameStart();
     }
 }
-
-// setTimeout(()=>{
-    
-// },0);
 
 var hookDeg = 0;            //钩子摆动角度
 var hookState = false;      //钩子摆动状态 false 启动 true 停止
@@ -24,11 +21,11 @@ var tabBoxOffsetTop = 0;    //挖矿区域距顶部距离
 var level = 1;              //关卡数
 var remPx = 0;              //换算单位 1rem 等于多少px
 var moveHeight = 0;         //钩子伸出距离
-var speed = 20;             //钩子速度
-var isAfterOre = true;      //碰到后关闭查找是否碰触元素方法
+var speed = 20;              //钩子速度
+var isAfterOre = true;     //碰到后关闭查找是否碰触元素方法
 var userScore = 0;          //用户拿到的分数值
 var objOre;                 //触碰到的矿石
-var gameTime = 90;          //没关的游戏时间
+var gameTime = 5;          //没关的游戏时间
 var gameInterval;           //时间定时器控制 用于清除定时器
 var gameState = false;      //游戏是否启动
 
@@ -44,92 +41,92 @@ var levelArray = [
                 score: 100,     //分数
                 speed: 8        //速度 不超过20 数值越大速度越慢
             },
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 200, speed: 10},
-        ],
-        stone: [
-            // {type: "stone", score: 50, speed: 18},
-            // {type: "stone", score: 30, speed: 14},
-            // {type: "stone", score: 20, speed: 10},
-        ]
-    },
-    {
-        gold: [
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
             {type: "gold", score: 200, speed: 10},
         ],
         stone: [
-            // {type: "stone", score: 50, speed: 18},
-            // {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 50, speed: 18},
+            {type: "stone", score: 30, speed: 14},
             {type: "stone", score: 20, speed: 10},
         ]
     },
     {
         gold: [
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+        ],
+        stone: [
+            {type: "stone", score: 50, speed: 18},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+        ]
+    },
+    {
+        gold: [
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
             {type: "gold", score: 100,speed: 8},
         ],
         stone: [
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
-            // {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
             {type: "stone", score: 30, speed: 14},
         ]
     },
     {
         gold: [
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
             {type: "gold", score: 400, speed: 16},
         ],
         stone: [
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
             {type: "stone", score: 50, speed: 18},
         ]
     },
     {
         gold: [
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 200, speed: 10},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 100,speed: 8},
-            // {type: "gold", score: 400, speed: 16},
-            // {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 200, speed: 10},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
+            {type: "gold", score: 400, speed: 16},
+            {type: "gold", score: 100,speed: 8},
             {type: "gold", score: 400, speed: 16},
         ],
         stone: [
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
-            // {type: "stone", score: 20, speed: 10},
-            // {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
+            {type: "stone", score: 20, speed: 10},
+            {type: "stone", score: 30, speed: 14},
             {type: "stone", score: 50, speed: 18},
         ]
     },
@@ -145,10 +142,6 @@ $(document).ready(function () {
     //为钩子 线 重新赋值 位置大小等信息px
     $(".hookBox").css({"height": remPx * 4, "top": remPx * 8, "left": remPx * 9.2,});
     $(".hookLine").css({"height": remPx * 3, "top": remPx * 8, "left": remPx * 9.9,});
-    //点击开始挖矿
-    $(".loadingHtml").on("click",function(){
-        gameRestart()
-    });
     //点击弹出钩子
     $(".tabBox").on("click", function () {
         //判断钩子有没有收回
@@ -161,10 +154,7 @@ $(document).ready(function () {
     });
     //游戏结束关闭游戏
     $(".gameStopClose").on("click",function(){
-        //进入游戏首页
-        $(".loadingHtml").fadeIn();
-        //关闭游戏停止盒子
-        $(".gameStopBox").fadeOut();
+        history.back(-1);
     });
 });
 
@@ -197,31 +187,13 @@ function gameStart() {
     renderOre(levelArray[level - 1].gold);
     //绘制大石头
     renderOre(levelArray[level - 1].stone);
-    //每一级别中倒计时
-    gameTime = 5;
+    // gameTime = 5;
     $(".gameTime").text(gameTime+"s");
     //钩子摆动
     hookStart();
     //游戏是否启动
     gameState = true;
     gameTimeStart();
-}
-
-/**
- * 游戏从0开始
- */
-function gameRestart() {
-    //开始界面淡出
-    $(".loadingHtml").fadeOut();
-    //设置参数
-    level = 1;
-    userScore = 0;
-    //修改分数
-    $(".userScore").text(userScore);
-    //修改1级别背景图
-    nextLevel(level);
-    //启动游戏
-    gameStart();
 }
 
 // 定时器开始
@@ -313,9 +285,14 @@ function hookMove(moveSmer) {
                 //如果矿石全部抓完 当前关卡结束
                 if($(".oreImg").length==0){
                     if(level<levelArray.length){
-                        // 进入下一级别
                         level+=1;
-                        nextLevel(level)
+                        $(".main").css("background","url('public/image/gameBg"+level+".png')");
+                        $(".main").css("background-size","cover");
+                        $(".timeBrandBox").css("background","url('public/image/timeBrand"+level+".png')");
+                        $(".timeBrandBox").css("background-size","cover");
+                        $(".levelBrandBox").css("background","url('public/image/levelBrand"+level+".png')");
+                        $(".levelBrandBox").css("background-size","cover");
+                        $(".levelNum").text("level "+level);
                         gameStart();
                     }else{
                         gameStop();
@@ -440,18 +417,4 @@ function impact(obj, dobj) {
     } else {
         return false;
     }
-}
-
-/**
- * 绘制某级别场景
- * @param {*} level 
- */
-function nextLevel(level){
-    $(".main").css("background","url('public/image/gameBg"+level+".png')");
-    $(".main").css("background-size","cover");
-    $(".timeBrandBox").css("background","url('public/image/timeBrand"+level+".png')");
-    $(".timeBrandBox").css("background-size","cover");
-    $(".levelBrandBox").css("background","url('public/image/levelBrand"+level+".png')");
-    $(".levelBrandBox").css("background-size","cover");
-    $(".levelNum").text("level "+level);
 }

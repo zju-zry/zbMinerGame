@@ -1,3 +1,4 @@
+<!-- 账单页面 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,8 +25,8 @@
     }
     #backimg {
       position: absolute;
-      left: 10px;
-      top: 10px;
+      left: 15px;
+      top: 15px;
     }
     main {
       width: 370px;
@@ -38,6 +39,7 @@
       margin-top: 10px;
       padding: 20px;
 
+      font-size: 18px;
       line-height: 2.0em;
       font-weight: 200;
     }
@@ -55,19 +57,23 @@
 <body>
   <div id="allcontent">
     <header>
-      <img id="backimg" src="imgs/返回的副本.png" alt="">
+      <a href="index.html">
+        <img id="backimg" src="imgs/返回的副本.png" alt="">
+      </a>
       区块链账本
     </header>
 
-    <main>
+    <main id = "main">
+      <!-- 交易内容 -->
       <div class="tx">
         <img class="inoutimg" src="imgs/收入@3x.png" alt="">
-        <span class="bold">矿工</span> 张瑞元 <br>
+        <span class="bold">矿工</span> <span>张瑞元</span> <br>
         <span class="bold">收入</span> 10zb <br>
         <span class="bold">所在区块</span> 89787675 <br>
         <span class="bold">唯一编码</span> ghon7fhkih286tifbkibf8gfs7
       </div>
-      <div class="tx">
+      
+      <!-- <div class="tx">
         <img class="inoutimg" src="imgs/支出@3x.png" alt="">
         <span class="bold">商品</span> 衣服x1件 <br>
         <span class="bold">价格</span> 10zb <br>
@@ -91,8 +97,9 @@
         <span class="bold">收入</span> 10zb <br>
         <span class="bold">所在区块</span> 89787675 <br>
         <span class="bold">唯一编码</span> ghon7fhkih286tifbkibf8gfs7
-      </div>
+      </div> -->
     </main>
   </div>
+  <script src="public/js/bill.js"></script>
 </body>
 </html>
