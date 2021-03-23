@@ -25,7 +25,7 @@ var speed = 20;              //钩子速度
 var isAfterOre = true;     //碰到后关闭查找是否碰触元素方法
 var userScore = 0;          //用户拿到的分数值
 var objOre;                 //触碰到的矿石
-var gameTime = 5;          //没关的游戏时间
+var gameTime = 100;          //每关的游戏时间
 var gameInterval;           //时间定时器控制 用于清除定时器
 var gameState = false;      //游戏是否启动
 
@@ -156,6 +156,10 @@ $(document).ready(function () {
     $(".gameStopClose").on("click",function(){
         history.back(-1);
     });
+    // 提前结束游戏
+    $("#quitbutton").on("click",function(){
+        gameStop()
+    })
 });
 
 /**
@@ -179,6 +183,8 @@ function gameStop() {
  * 游戏开始
  */
 function gameStart() {
+    //提前终止按钮显示
+    $("#quitbutton").css("visibility","visible")
     //游戏开始时清除所有矿石
     $(".oreImg").remove();
     // 清除定时器

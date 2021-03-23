@@ -9,10 +9,6 @@ var billin = {
   id1:"唯一编码 ", id2:"ghon7fhkih286tifbkibf8gfs7",
 };
 
-
-
-
-
 window.onload = init;
 
 function init() {
