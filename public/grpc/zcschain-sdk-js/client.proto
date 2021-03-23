@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package client;
+
+option go_package = "ZCSChain/client/proto";
+
+
+/**
+    生成grpc nodejs相关代码的命令为：
+    npm install -g grpc-tools
+    grpc_tools_node_protoc --js_out=import_style=commonjs,binary:. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` client.proto
+ */
+
+
+/**
+ * @Description:客户端请求peer处的链码-请求值
+ * @author zhangruiyuan
+ * @date 2021/3/21 2:45 下午
+ */
+message ChaincodeRequest {
+  // 通道的编号
+  string channelId = 1;
+  // 链码的编号
+  string chainCodeId = 2;
+  // 调用的函数名称和参数 json的形式
+  string funAndPrams = 3;
+}
+
+/**
+ * @Description:客户端请求peer处的链码-返回值
+ * @author zhangruiyuan
+ * @date 2021/3/21 2:45 下午
+ */
+message ChaincodeReply{
+  // 调用的结果： 0 表示成功、 1 表示执行失败
+  enum StatusCode {
+    SUCCESS = 0;
+    FAIL = 1;
+  }
+  StatusCode status = 1;
+  // 链码执行之后的结果
+  string result = 2;
+  // 所在区块的hash值
+  string blockHash = 3;
+}
+
+// 请求账本数据 - 请求
+message BlockChainRequest{
+  string channelId = 1;
+  string chainCodeId = 2;
+}
+
+// 请求账本数据 - 返回值
+message BlockChainReply{
+  // 如果是挖矿收入的话需要填写此项
+  string miner = 1;
+  string zbNumber = 2;
+  string blockNum = 3;
+  string blockHash = 4;
+  // 如果是商品支出的话需要填写此项，买家和卖家。
+  string buyer = 5;
+  string seller = 6;
+
+  // 交易的类型：购买商品支出、挖矿收入
+  enum TrancationCode{
+    ZHI_CHU = 0;
+    WA_KUANG = 1;
+  }
+  TrancationCode status = 6;
+}
+
+/**
+ * @Description: peer提供的服务
+ * @author zhangruiyuan
+ * @date 2021/3/21 3:10 下午
+ */
+service ChainServer{
+  //  客户端请求peer处的链码
+  rpc DoChainCode(ChaincodeRequest)returns(ChaincodeReply){}
+  //  请求账本数据
+  rpc BlockChain(BlockChainRequest)returns(stream BlockChainReply){}
+}
