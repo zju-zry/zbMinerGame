@@ -418,7 +418,7 @@ function gameStop() {
     //游戏是否启动
     gameState = false;
     //执行智能合约上的挖矿接口
-    ccMine("peer01", userScore)
+    ccMine("peer1", userScore)
 
 }
 
@@ -685,10 +685,7 @@ function ccMine(miner, money) {
     let req = {};
     req.channelId = 'mychannel'
     req.chainCodeId = 'mineGame'
-    req.funAndParms = `{
-        function: "Mine",
-        args:["${miner}",${money}]
-    }`
+    req.funAndParms = `["Mine","${miner}","${money}"]`
     $.ajax({
         type:'post',
         url:'http://127.0.0.1:8000/api/dochaincode',

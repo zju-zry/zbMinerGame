@@ -4,7 +4,9 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-
+const ipaddr = 'localhost:7051'
+const channelId = 'mychannel'
+const chainCodeId = 'mineGame'
 
 //设置跨域访问
 app.all('*', function (req, res, next) {
@@ -26,6 +28,7 @@ app.use(bodyParser.json()); //data参数以字典格式传输
  */
 // 127.0.0.1:8000/api/dochaincode?channelId=1&chainCodeId=2&funAndParms={name:"zhangruiyuan"}
 app.post('/api/dochaincode', (reqe, res) => {
+
     // 处理前端的请求
     let r = reqe.body
 
@@ -36,7 +39,7 @@ app.post('/api/dochaincode', (reqe, res) => {
     let grpc = require('grpc')
 
     // 创建客户端工具
-    let client = new services.ChainServerClient('localhost:8080', grpc.credentials.createInsecure());
+    let client = new services.ChainServerClient(ipaddr, grpc.credentials.createInsecure());
 
     // 创建请求的对象
     let req = new massages.ChaincodeRequest();
@@ -48,6 +51,7 @@ app.post('/api/dochaincode', (reqe, res) => {
     client.doChainCode(req, function (err, resp) {
         // 对处理结果进行相应
         let jsonObj = JSON.parse(resp.getResult())
+        // console.log(resp)
         // 对前端进行返回
         res.send(jsonObj);
     })
@@ -63,7 +67,7 @@ app.post('/api/blockchain', (reqe, resp) => {
     let grpc = require('grpc')
 
     // 创建客户端工具
-    let client = new services.ChainServerClient('localhost:8080', grpc.credentials.createInsecure());
+    let client = new services.ChainServerClient(ipaddr, grpc.credentials.createInsecure());
 
     // 创建请求的对象
     let req = new massages.BlockChainRequest();
@@ -90,8 +94,39 @@ app.post('/api/blockchain', (reqe, resp) => {
     })
 })
 
+
+/**
+ * 执行init函数
+ */
+function ccInit(){
+
+    // 向后端提交请求
+    // 初始化配置
+    let massages = require('../grpc/zcschain-sdk-js/client_pb')
+    let services = require('../grpc/zcschain-sdk-js/client_grpc_pb')
+    let grpc = require('grpc')
+
+    // 创建客户端工具
+    let client = new services.ChainServerClient(ipaddr, grpc.credentials.createInsecure());
+
+    // 创建请求的对象
+    let req = new massages.ChaincodeRequest();
+    req.setChannelid(channelId)
+    req.setChaincodeid(chainCodeId)
+    req.setFunandprams('["init"]')
+
+    // 发送请求
+    client.doChainCode(req, function (err, resp) {
+        console.log("初始化链码成功")
+    })
+}
+
+
+
 //配置服务端口
 let server = app.listen(8000, () => {
     console.log("node接口服务正常运行");
+    console.log('正在初始化链码')
+    // 启动链码的初始化
+    ccInit()
 });
-

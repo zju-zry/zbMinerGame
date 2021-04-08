@@ -1,3 +1,30 @@
+const Goods = [
+    {
+        seller: "peer0",
+        money : 10
+    },
+    {
+        seller: "peer2",
+        money : 30
+    },
+    {
+        seller: "peer3",
+        money : 150
+    },
+    {
+        seller: "peer0",
+        money : 10
+    },
+    {
+        seller: "peer2",
+        money : 30
+    },
+    {
+        seller: "peer3",
+        money : 150
+    },
+]
+
 //监听加载状态改变
 document.onreadystatechange = completeLoading;
 
@@ -5,8 +32,10 @@ document.onreadystatechange = completeLoading;
 function completeLoading() {
     if (document.readyState == "complete") {
         // $(".loadingHtml").fadeOut(10000);
-        queryGoods();
-        refeshView('1,2,3,4,5,6')
+        // 假定当前用户是peer1
+        let goods = queryGoods("peer1");
+        console.log(goods)
+        refeshView(goods)
         
     }
 }
@@ -17,10 +46,20 @@ function completeLoading() {
  */
 function refeshView(str){
     let arr = str.split(',')
+    
     for (let i=0;i<arr.length;i++){
         $($('.smaller')[i]).html("已拥有："+arr[i])
         $($('.downloadimg')[i]).click(()=>{
-            alert('购买'+i)
+            console.log('购买'+Goods[i].seller+"-"+Goods[i].money)
+            let b = queryBalance("peer1")
+            b = JSON.parse(b.message).balance
+            console.log('当前账户的余额为'+b)
+            if (b<Goods[i].money){
+                alert("对不起，您的余额为"+b+"，你买不起，要先去挖矿")
+            }else{
+                shopping("peer1",Goods[i].money,Goods[i].seller,i)
+                alert('恭喜您购物成功，您当前的余额为'+(b-Goods[i].money))
+            }
         })
     }
 }   
@@ -34,21 +73,19 @@ function queryGoods(miner){
     let req = {};
     req.channelId = 'mychannel'
     req.chainCodeId = 'mineGame'
-    req.funAndParms = `{
-        function: "QueryGoods",
-        args:["${miner}"]
-    }`
+    req.funAndParms = `["QueryGoods","${miner}"]`
+    let goods = ""
     $.ajax({
         type:'post',
         url:'http://127.0.0.1:8000/api/dochaincode',
         data:req,
         success:res=>{
             console.log(`查询成功，您当前用户的商品数量为${res}`)
-            // todo
-            // 将这个商品数量映射到界面中
+            goods = res.message
         },
         async:false,
     })
+    return goods
 }
 
 /**
@@ -60,10 +97,7 @@ function queryBalance(miner){
     let req = {};
     req.channelId = 'mychannel'
     req.chainCodeId = 'mineGame'
-    req.funAndParms = `{
-        function: "QueryBalance",
-        args:["${miner}"]
-    }`
+    req.funAndParms = `["QueryBalance","${miner}"]`
     let balance = -1
     $.ajax({
         type:'post',
@@ -85,22 +119,18 @@ function queryBalance(miner){
  * @param {*} balance 
  * @param {*} otherPeer 
  */
-function shopping(miner,balance,otherPeer){
+function shopping(miner,balance,otherPeer,index){
     // 创建请求的对象
     let req = {};
     req.channelId = 'mychannel'
     req.chainCodeId = 'mineGame'
-    req.funAndParms = `{
-        function: "Shopping",
-        args:["${miner}","${balance}","${otherPeer}"]
-    }`
+    req.funAndParms = `["Shopping","${miner}","${balance}","${otherPeer}_${index}"]`
     $.ajax({
         type:'post',
         url:'http://127.0.0.1:8000/api/dochaincode',
         data:req,
         success:res=>{
-            console.log(`购物成功，您当前用户的余额为${res}`)
-            // todo
+            console.log(res)
         },
         async:false,
     })
