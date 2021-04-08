@@ -1,19 +1,25 @@
 {
-  "name": "nodejs",
+  "name": "zbminergame",
   "version": "1.0.0",
-  "description": "",
-  "testSdk": "public/grpc/zcschain-sdk-js/main.js",
+  "description": "实现 黄金矿工游戏中的首页，账单，商店及游戏页面。",
+  "main": "index.js",
   "scripts": {
-    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zju-zry/zbMinerGame.git"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "google-protobuf": "^3.15.6",
-    "grpc": "^1.24.6"
+  "bugs": {
+    "url": "https://github.com/zju-zry/zbMinerGame/issues"
   },
-  "devDependencies": {
-    "grpc-tools": "^1.11.0"
+  "homepage": "https://github.com/zju-zry/zbMinerGame#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "google-protobuf": "^3.15.7",
+    "grpc": "^1.24.6"
   }
 }

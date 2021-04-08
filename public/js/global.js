@@ -9,125 +9,358 @@ function completeLoading() {
     }
 }
 
-var hookDeg = 0;            //钩子摆动角度
-var hookState = false;      //钩子摆动状态 false 启动 true 停止
-var hookController = 1;     //控制钩子左右摆动
-var hookMoveNum = 1;        //钩子伸出长度控制变量
-var hookMoveState = false;  //钩子伸出状态 false 启动 true 停止
-var hookMoveStop = false;   //判断不能双击变量
-var tabBoxWidth = 0;        //挖矿区域盒子宽度
-var tabBoxHeight = 0;       //挖矿区域盒子高度
-var tabBoxOffsetTop = 0;    //挖矿区域距顶部距离
-var level = 1;              //关卡数
-var remPx = 0;              //换算单位 1rem 等于多少px
-var moveHeight = 0;         //钩子伸出距离
-var speed = 20;              //钩子速度
-var isAfterOre = true;     //碰到后关闭查找是否碰触元素方法
-var userScore = 0;          //用户拿到的分数值
-var objOre;                 //触碰到的矿石
-var gameTime = 100;          //每关的游戏时间
-var gameInterval;           //时间定时器控制 用于清除定时器
-var gameState = false;      //游戏是否启动
+var hookDeg = 0; //钩子摆动角度
+var hookState = false; //钩子摆动状态 false 启动 true 停止
+var hookController = 1; //控制钩子左右摆动
+var hookMoveNum = 1; //钩子伸出长度控制变量
+var hookMoveState = false; //钩子伸出状态 false 启动 true 停止
+var hookMoveStop = false; //判断不能双击变量
+var tabBoxWidth = 0; //挖矿区域盒子宽度
+var tabBoxHeight = 0; //挖矿区域盒子高度
+var tabBoxOffsetTop = 0; //挖矿区域距顶部距离
+var level = 1; //关卡数
+var remPx = 0; //换算单位 1rem 等于多少px
+var moveHeight = 0; //钩子伸出距离
+var speed = 20; //钩子速度
+var isAfterOre = true; //碰到后关闭查找是否碰触元素方法
+var userScore = 0; //用户拿到的分数值
+var objOre; //触碰到的矿石
+var gameTime = 100; //每关的游戏时间
+var gameInterval; //时间定时器控制 用于清除定时器
+var gameState = false; //游戏是否启动
 
 /**
  * 共分5关 第一关1000 第二关1500 第三关2000 第四关2500 第五关3000
  */
 
-var levelArray = [
-    {
-        gold: [
-            {
-                type: "gold",   //类型
-                score: 100,     //分数
-                speed: 8        //速度 不超过20 数值越大速度越慢
+var levelArray = [{
+        gold: [{
+                type: "gold", //类型
+                score: 100, //分数
+                speed: 8 //速度 不超过20 数值越大速度越慢
             },
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 200, speed: 10},
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
         ],
-        stone: [
-            {type: "stone", score: 50, speed: 18},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
+        stone: [{
+                type: "stone",
+                score: 50,
+                speed: 18
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
         ]
     },
     {
-        gold: [
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 200, speed: 10},
+        gold: [{
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
         ],
-        stone: [
-            {type: "stone", score: 50, speed: 18},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
+        stone: [{
+                type: "stone",
+                score: 50,
+                speed: 18
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
         ]
     },
     {
-        gold: [
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 100,speed: 8},
+        gold: [{
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
         ],
-        stone: [
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
+        stone: [{
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
         ]
     },
     {
-        gold: [
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
+        gold: [{
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
         ],
-        stone: [
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 50, speed: 18},
+        stone: [{
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 50,
+                speed: 18
+            },
         ]
     },
     {
-        gold: [
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 200, speed: 10},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
-            {type: "gold", score: 100,speed: 8},
-            {type: "gold", score: 400, speed: 16},
+        gold: [{
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 200,
+                speed: 10
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
+            {
+                type: "gold",
+                score: 100,
+                speed: 8
+            },
+            {
+                type: "gold",
+                score: 400,
+                speed: 16
+            },
         ],
-        stone: [
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 20, speed: 10},
-            {type: "stone", score: 30, speed: 14},
-            {type: "stone", score: 50, speed: 18},
+        stone: [{
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 20,
+                speed: 10
+            },
+            {
+                type: "stone",
+                score: 30,
+                speed: 14
+            },
+            {
+                type: "stone",
+                score: 50,
+                speed: 18
+            },
         ]
     },
 ];
@@ -136,12 +369,20 @@ $(document).ready(function () {
     tabBoxWidth = $(".tabBox").width(); //挖矿区域盒子宽度
     tabBoxHeight = $(".tabBox").height(); //挖矿区域盒子高度
     tabBoxOffsetTop = $(".tabBox").offset().top; //挖矿区域盒子高度
-    remPx = $(".remPx")[0].getBoundingClientRect().height;        //remPx 赋值为 1rem 的 px值
+    remPx = $(".remPx")[0].getBoundingClientRect().height; //remPx 赋值为 1rem 的 px值
     //钩子伸出距离初始赋值
     moveHeight = $(".main").height() - remPx * 9.2;
     //为钩子 线 重新赋值 位置大小等信息px
-    $(".hookBox").css({"height": remPx * 4, "top": remPx * 8, "left": remPx * 9.2,});
-    $(".hookLine").css({"height": remPx * 3, "top": remPx * 8, "left": remPx * 9.9,});
+    $(".hookBox").css({
+        "height": remPx * 4,
+        "top": remPx * 8,
+        "left": remPx * 9.2,
+    });
+    $(".hookLine").css({
+        "height": remPx * 3,
+        "top": remPx * 8,
+        "left": remPx * 9.9,
+    });
     //点击弹出钩子
     $(".tabBox").on("click", function () {
         //判断钩子有没有收回
@@ -153,11 +394,11 @@ $(document).ready(function () {
         hookMove(1);
     });
     //游戏结束关闭游戏
-    $(".gameStopClose").on("click",function(){
+    $(".gameStopClose").on("click", function () {
         history.back(-1);
     });
     // 提前结束游戏
-    $("#quitbutton").on("click",function(){
+    $("#quitbutton").on("click", function () {
         gameStop()
     })
 });
@@ -176,6 +417,8 @@ function gameStop() {
     hookStop();
     //游戏是否启动
     gameState = false;
+    //执行智能合约上的挖矿接口
+    ccMine("peer01", userScore)
 
 }
 
@@ -184,7 +427,7 @@ function gameStop() {
  */
 function gameStart() {
     //提前终止按钮显示
-    $("#quitbutton").css("visibility","visible")
+    $("#quitbutton").css("visibility", "visible")
     //游戏开始时清除所有矿石
     $(".oreImg").remove();
     // 清除定时器
@@ -194,7 +437,7 @@ function gameStart() {
     //绘制大石头
     renderOre(levelArray[level - 1].stone);
     // gameTime = 5;
-    $(".gameTime").text(gameTime+"s");
+    $(".gameTime").text(gameTime + "s");
     //钩子摆动
     hookStart();
     //游戏是否启动
@@ -205,16 +448,18 @@ function gameStart() {
 // 定时器开始
 function gameTimeStart() {
     //游戏是否启动
-    if(!gameState){return}
-    gameInterval = setInterval(function(){
-        if(gameTime!=0){
+    if (!gameState) {
+        return
+    }
+    gameInterval = setInterval(function () {
+        if (gameTime != 0) {
             gameTime--;
-            $(".gameTime").text(gameTime+"s");
-        }else{
+            $(".gameTime").text(gameTime + "s");
+        } else {
             gameStop();
             clearInterval(gameInterval);
         }
-    },1000);
+    }, 1000);
 }
 
 /**
@@ -289,18 +534,18 @@ function hookMove(moveSmer) {
                 objOre.obj.remove();
                 objOre = null;
                 //如果矿石全部抓完 当前关卡结束
-                if($(".oreImg").length==0){
-                    if(level<levelArray.length){
-                        level+=1;
-                        $(".main").css("background","url('public/image/gameBg"+level+".png')");
-                        $(".main").css("background-size","cover");
-                        $(".timeBrandBox").css("background","url('public/image/timeBrand"+level+".png')");
-                        $(".timeBrandBox").css("background-size","cover");
-                        $(".levelBrandBox").css("background","url('public/image/levelBrand"+level+".png')");
-                        $(".levelBrandBox").css("background-size","cover");
-                        $(".levelNum").text("level "+level);
+                if ($(".oreImg").length == 0) {
+                    if (level < levelArray.length) {
+                        level += 1;
+                        $(".main").css("background", "url('public/image/gameBg" + level + ".png')");
+                        $(".main").css("background-size", "cover");
+                        $(".timeBrandBox").css("background", "url('public/image/timeBrand" + level + ".png')");
+                        $(".timeBrandBox").css("background-size", "cover");
+                        $(".levelBrandBox").css("background", "url('public/image/levelBrand" + level + ".png')");
+                        $(".levelBrandBox").css("background-size", "cover");
+                        $(".levelNum").text("level " + level);
                         gameStart();
-                    }else{
+                    } else {
                         gameStop();
                     }
                 }
@@ -345,9 +590,12 @@ function hookMove(moveSmer) {
     }
     //钩子 线 移动状态
     $(".hookBox").css("height", hookMoveNum + remPx * 3 + "px");
-    $(".hookLine").css("height", hookMoveNum+ remPx * 2 + "px");
+    $(".hookLine").css("height", hookMoveNum + remPx * 2 + "px");
     if (objOre) {
-        objOre.obj.css({"top": $(".hookPoint").offset().top - 10, "left": $(".hookPoint").offset().left - 10})
+        objOre.obj.css({
+            "top": $(".hookPoint").offset().top - 10,
+            "left": $(".hookPoint").offset().left - 10
+        })
     }
     setTimeout('hookMove(' + moveSmer + ')', 50);
 }
@@ -370,7 +618,8 @@ function getNum(lowerValue, upperValue) {
 function renderOre(arr) {
     for (var i = 0; i < arr.length; i++) {
         // 通过getNum函数获取图片xy轴的坐标
-        var top = getNum(tabBoxOffsetTop + 50, tabBoxHeight), left = getNum(10, tabBoxWidth-40) + $(".tabBox").offset().left;
+        var top = getNum(tabBoxOffsetTop + 50, tabBoxHeight),
+            left = getNum(10, tabBoxWidth - 40) + $(".tabBox").offset().left;
         //随机旋转角度
         var rotate = getNum(0, 360);
         //根据分值绘制大小
@@ -382,12 +631,12 @@ function renderOre(arr) {
         }
         // 追加到div容器中
         $("<img/>", {
-            "class": "oreImg",
-            "src": "public/image/" + arr[i].type + ".png",
-            "data-score": arr[i].score,
-            "data-type": arr[i].type,
-            "data-speed": arr[i].speed
-        }).appendTo(".main")
+                "class": "oreImg",
+                "src": "public/image/" + arr[i].type + ".png",
+                "data-score": arr[i].score,
+                "data-type": arr[i].type,
+                "data-speed": arr[i].speed
+            }).appendTo(".main")
             .css({
                 "top": top,
                 "left": left,
@@ -419,8 +668,34 @@ function impact(obj, dobj) {
     py = o.y <= d.y ? d.y : o.y;
     // 判断点是否都在两个对象中
     if (px >= o.x && px <= o.x + o.w && py >= o.y && py <= o.y + o.h && px >= d.x && px <= d.x + d.w && py >= d.y && py <= d.y + d.h) {
-        return {obj: dobj, top: d.y};
+        return {
+            obj: dobj,
+            top: d.y
+        };
     } else {
         return false;
     }
+}
+
+/**
+ * 挖矿接口：在游戏结束的时候调用
+ */
+function ccMine(miner, money) {
+    // 创建请求的对象
+    let req = {};
+    req.channelId = 'mychannel'
+    req.chainCodeId = 'mineGame'
+    req.funAndParms = `{
+        function: "Mine",
+        args:["${miner}",${money}]
+    }`
+    $.ajax({
+        type:'post',
+        url:'http://127.0.0.1:8000/api/dochaincode',
+        data:req,
+        success:res=>{ 
+            console.log(`挖矿成功，您当前的余额为${res.balance}`)
+        },
+        async:false,
+    })
 }

@@ -60,7 +60,6 @@ message BlockChainReply{
   // 如果是商品支出的话需要填写此项，买家和卖家。
   string buyer = 5;
   string seller = 6;
-
   // 交易的类型：购买商品支出、挖矿收入
   enum TrancationCode{
     ZHI_CHU = 0;

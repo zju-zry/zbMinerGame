@@ -100,3 +100,28 @@ req.setFunandprams( `{
 console.log(resp.getState())
 ```
 
+5. 完成账单查看接口
+
+用户可以在首页中进入到账本管理界面，查看历史的交易订单。
+
+使用接口`BlockChain`
+
+```js
+var req = new massages.BlockChainRequest();
+req.setChannelid('mychannel')
+req.setChaincodeid('mineGame')
+
+// 返回值应当是数据流，关于账单的数据流
+// 目前还不清楚是需要我这边处理还是由
+
+```
+
+## 项目实现
+
+1. 完成挖矿的接口实现
+2. 完成查询用户拥有的商品数量接口
+3. 完成查询用户余额接口
+4. 完成购物的接口
+5. 完成账单查看接口
+
+
